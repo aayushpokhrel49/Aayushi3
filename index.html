@@ -573,7 +573,7 @@
             display: none;
         }
 
-        #upload-label, #send-btn, #ai-btn, #image-btn {
+        #upload-label, #send-btn, #ai-btn {
             border: none;
             padding: 12px;
             border-radius: 50%;
@@ -609,13 +609,6 @@
         }
         #ai-btn:hover {
             background: var(--ai-dark);
-        }
-
-        #image-btn {
-            background: var(--image-color);
-        }
-        #image-btn:hover {
-            background: #7c3aed;
         }
 
         /* Typing Indicator */
@@ -700,7 +693,7 @@
                 text-align: center;
             }
 
-            #upload-label, #send-btn, #ai-btn, #image-btn {
+            #upload-label, #send-btn, #ai-btn {
                 width: 44px;
                 height: 44px;
             }
@@ -729,7 +722,7 @@
                 font-size: 14px;
             }
             
-            #upload-label, #send-btn, #ai-btn, #image-btn {
+            #upload-label, #send-btn, #ai-btn {
                 width: 40px;
                 height: 40px;
             }
@@ -757,7 +750,7 @@
                 padding: 10px;
             }
             
-            #upload-label, #send-btn, #ai-btn, #image-btn {
+            #upload-label, #send-btn, #ai-btn {
                 width: 36px;
                 height: 36px;
             }
@@ -891,6 +884,7 @@
                     <input type="file" id="file-input">
                     
                     <textarea id="message-input" placeholder="Type message, use @AI for assistance, /image for images, or paste code..." autocomplete="off" rows="1"></textarea>
+                    
                     <button type="button" id="ai-btn" title="Ask AI">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/>
@@ -950,7 +944,6 @@
         const typingIndicator = document.getElementById('typing-indicator');
         const typingText = document.getElementById('typing-text');
         const aiBtn = document.getElementById('ai-btn');
-        const imageBtn = document.getElementById('image-btn');
         const aiPromptBtns = document.querySelectorAll('.ai-prompt-btn');
         const uploadLabel = document.getElementById('upload-label');
 
@@ -1055,17 +1048,6 @@
                 messageInput.value = `@AI ${currentText}`;
             } else {
                 messageInput.value = '@AI ';
-            }
-            messageInput.focus();
-        });
-
-        // Image Button
-        imageBtn.addEventListener('click', () => {
-            const currentText = messageInput.value.trim();
-            if (currentText) {
-                messageInput.value = `/image ${currentText}`;
-            } else {
-                messageInput.value = '/image ';
             }
             messageInput.focus();
         });
