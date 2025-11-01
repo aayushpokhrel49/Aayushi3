@@ -3,9 +3,1225 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Page Title</title>
+    <title>School Friends Group Chat</title>
+    
+    <style>
+        :root {
+            --primary-color: #4a6ee0;
+            --primary-light: #e3ebff;
+            --primary-dark: #3a5bc7;
+            --secondary-color: #6c757d;
+            --success-color: #28a745;
+            --danger-color: #dc3545;
+            --warning-color: #ffc107;
+            --info-color: #17a2b8;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+            --background-color: #f5f7fb;
+            --container-bg: #ffffff;
+            --text-color: #333333;
+            --text-light: #6c757d;
+            --border-color: #e1e5eb;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --shadow-light: 0 2px 6px rgba(0, 0, 0, 0.05);
+            --code-bg: #282c34;
+            --mention-color: #ff6b6b;
+            --ai-color: #10b981;
+            --ai-light: #d1fae5;
+            --ai-dark: #059669;
+            --user-color: #4a6ee0;
+            --user-light: #e3ebff;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--background-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            color: var(--text-color);
+            line-height: 1.5;
+            padding: 10px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1000px;
+            height: 90vh;
+            background: var(--container-bg);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* --- Login Screen --- */
+        #login-screen {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+            height: 100%;
+            text-align: center;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            color: white;
+        }
+
+        .login-card {
+            background: white;
+            border-radius: 12px;
+            padding: 40px 30px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: var(--shadow);
+            color: var(--text-color);
+        }
+
+        #login-screen h1 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        #login-screen p {
+            color: var(--text-light);
+            margin-bottom: 30px;
+        }
+
+        .login-options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .login-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            font-size: 16px;
+            font-weight: 500;
+            padding: 14px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            background-color: white;
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+        }
+
+        .login-btn:hover {
+            background-color: var(--light-color);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-light);
+        }
+
+        .login-btn.google {
+            background-color: #4285f4;
+            color: white;
+            border: none;
+        }
+
+        .login-btn.google:hover {
+            background-color: #3367d6;
+        }
+
+        .anon-login {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .anon-login input {
+            padding: 14px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.2s;
+        }
+
+        .anon-login input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px var(--primary-light);
+        }
+
+        .anon-login button {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .anon-login button:hover {
+            background-color: #5a6268;
+        }
+
+        /* --- Chat Screen --- */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background-color: var(--primary-color);
+            color: white;
+            box-shadow: var(--shadow-light);
+            flex-shrink: 0;
+            z-index: 10;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .online-indicator {
+            width: 8px;
+            height: 8px;
+            background-color: var(--success-color);
+            border-radius: 50%;
+        }
+
+        header h2 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        #user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        #user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: var(--light-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        #sign-out-btn {
+            background: transparent;
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+
+        #sign-out-btn:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        #chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+
+        #chat-box {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            background-color: var(--background-color);
+            padding-bottom: 80px;
+            height: 100%;
+            max-height: calc(100vh - 200px);
+        }
+        
+        /* Scrollbar styling */
+        #chat-box::-webkit-scrollbar {
+            width: 8px;
+        }
+        #chat-box::-webkit-scrollbar-thumb {
+            background-color: rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+        #chat-box::-webkit-scrollbar-thumb:hover {
+            background-color: rgba(0, 0, 0, 0.2);
+        }
+
+        .message {
+            padding: 12px 16px;
+            border-radius: 18px;
+            max-width: 85%;
+            align-self: flex-start;
+            word-wrap: break-word;
+            background: white;
+            box-shadow: var(--shadow-light);
+            transition: all 0.2s ease-in-out;
+            position: relative;
+        }
+
+        .message:hover {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .message .sender {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .message.system {
+            background: #fdfaea;
+            color: #6d6d00;
+            font-style: italic;
+            font-size: 14px;
+            align-self: center;
+            text-align: center;
+            max-width: 90%;
+            border-radius: 8px;
+            box-shadow: none;
+        }
+
+        .message.mine {
+            background: var(--user-color);
+            color: white;
+            align-self: flex-end;
+        }
+
+        .message.mine .sender {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .message.ai {
+            background: var(--ai-light);
+            border-left: 4px solid var(--ai-color);
+            max-width: 90%;
+        }
+
+        .message.ai .sender {
+            color: var(--ai-color);
+        }
+        
+        .message .timestamp {
+            font-size: 10px;
+            color: var(--text-light);
+            text-align: right;
+            margin-top: 4px;
+        }
+        
+        .message.mine .timestamp {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        /* Message Content: Text, Files, Code */
+        .message .text {
+            white-space: pre-wrap;
+            line-height: 1.4;
+        }
+
+        .message .file-link a {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255,255,255,0.2);
+            padding: 8px 12px;
+            border-radius: 8px;
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 500;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            transition: all 0.2s;
+        }
+        
+        .message.mine .file-link a {
+            color: white;
+            background: rgba(0,0,0,0.2);
+        }
+        
+        .message .file-link a:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+        
+        /* Code Block Styling */
+        .code-block {
+            position: relative;
+            margin: 10px 0;
+            border-radius: 8px;
+            overflow: hidden;
+            background: var(--code-bg);
+        }
+        
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #1e2227;
+            color: #abb2bf;
+            padding: 8px 12px;
+            font-size: 12px;
+            font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+        }
+        
+        .copy-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: #abb2bf;
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 11px;
+            transition: all 0.2s;
+        }
+        
+        .copy-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .copy-btn.copied {
+            background: var(--success-color);
+            color: white;
+        }
+        
+        .message pre {
+            background: var(--code-bg);
+            color: #abb2bf;
+            padding: 15px;
+            border-radius: 0 0 8px 8px;
+            overflow-x: auto;
+            font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+            font-size: 14px;
+            margin: 0;
+            white-space: pre;
+            line-height: 1.4;
+        }
+        
+        /* Mention Styling */
+        .mention {
+            font-weight: 600;
+            color: var(--primary-color);
+            background: var(--primary-light);
+            padding: 1px 4px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .mention.self-mention {
+            color: var(--mention-color);
+            background: #ffecb3;
+            box-shadow: 0 0 5px rgba(255, 0, 0, 0.2);
+        }
+        
+        .mention.ai-mention {
+            color: var(--ai-color);
+            background: var(--ai-light);
+        }
+
+        /* AI Welcome Message */
+        .ai-welcome {
+            background: var(--ai-light);
+            border-radius: 12px;
+            padding: 15px;
+            margin: 10px 0;
+            border-left: 4px solid var(--ai-color);
+        }
+
+        .ai-welcome h4 {
+            color: var(--ai-color);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .ai-prompt-suggestions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .ai-prompt-btn {
+            background: white;
+            border: 1px solid var(--ai-color);
+            color: var(--ai-color);
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .ai-prompt-btn:hover {
+            background: var(--ai-color);
+            color: white;
+        }
+
+        /* --- Fixed Message Form --- */
+        #message-form {
+            display: flex;
+            border-top: 1px solid var(--border-color);
+            padding: 15px;
+            gap: 10px;
+            background: white;
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 1000px;
+            box-sizing: border-box;
+            z-index: 100;
+            align-items: flex-end;
+        }
+
+        #message-input {
+            flex-grow: 1;
+            border: 1px solid var(--border-color);
+            padding: 12px 16px;
+            font-size: 16px;
+            border-radius: 24px;
+            resize: none;
+            max-height: 120px;
+            min-height: 50px;
+            transition: border-color 0.2s;
+            font-family: inherit;
+        }
+        #message-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px var(--primary-light);
+        }
+        
+        #file-input {
+            display: none;
+        }
+
+        #upload-label, #send-btn, #ai-btn {
+            border: none;
+            padding: 12px;
+            border-radius: 50%;
+            cursor: pointer;
+            background: var(--primary-color);
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            display: grid;
+            place-items: center;
+            width: 48px;
+            height: 48px;
+            box-sizing: border-box;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+        
+        #upload-label {
+            background: var(--light-color);
+            color: var(--text-color);
+        }
+        #upload-label:hover {
+            background: #e9ecef;
+            transform: translateY(-2px);
+        }
+        #send-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        #ai-btn {
+            background: var(--ai-color);
+        }
+        #ai-btn:hover {
+            background: var(--ai-dark);
+        }
+
+        /* Typing Indicator */
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 10px 15px;
+            font-size: 14px;
+            color: var(--text-light);
+            font-style: italic;
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 3px;
+        }
+
+        .typing-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background-color: var(--text-light);
+            animation: typing 1.4s infinite ease-in-out;
+        }
+
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes typing {
+            0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
+            40% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Utility Classes */
+        .hidden {
+            display: none !important;
+        }
+
+        .flex {
+            display: flex;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                height: 95vh;
+            }
+            
+            #login-screen {
+                padding: 20px;
+            }
+            
+            .login-card {
+                padding: 30px 20px;
+            }
+            
+            header {
+                padding: 12px 15px;
+            }
+            
+            #chat-box {
+                padding: 15px;
+                padding-bottom: 80px;
+            }
+            
+            .message {
+                max-width: 90%;
+            }
+            
+            #message-form {
+                padding: 12px;
+                gap: 8px;
+            }
+            
+            .ai-prompt-suggestions {
+                flex-direction: column;
+            }
+            
+            .ai-prompt-btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 5px;
+            }
+            
+            .container {
+                height: 98vh;
+            }
+            
+            .login-options {
+                gap: 10px;
+            }
+            
+            .login-btn {
+                padding: 12px 15px;
+                font-size: 14px;
+            }
+            
+            #message-input {
+                padding: 10px 14px;
+                font-size: 14px;
+            }
+            
+            #upload-label, #send-btn, #ai-btn {
+                width: 44px;
+                height: 44px;
+            }
+            
+            header h2 {
+                font-size: 16px;
+            }
+            
+            #user-info {
+                gap: 8px;
+            }
+            
+            #sign-out-btn {
+                padding: 6px 10px;
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .login-card {
+                padding: 20px 15px;
+            }
+            
+            #message-form {
+                padding: 10px;
+            }
+            
+            #upload-label, #send-btn, #ai-btn {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .message {
+                max-width: 95%;
+                padding: 10px 12px;
+            }
+        }
+
+        /* Loading animation for AI */
+        .ai-loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(16, 185, 129, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--ai-color);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
 </head>
 <body>
-    helooooooooooooooo
+
+    <div class="container">
+        <!-- Login Screen -->
+        <div id="login-screen">
+            <div class="login-card">
+                <h1>School Chat 🧑‍💻</h1>
+                <p>Welcome! Sign in to join the group chat.</p>
+                
+                <div class="login-options">
+                    <button class="login-btn google" id="google-login-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20">
+                            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                        </svg>
+                        Sign in with Google
+                    </button>
+                </div>
+                
+                <hr>
+                
+                <div class="anon-login">
+                    <input type="text" id="anon-name-input" placeholder="Enter a display name (for Anonymous)" autocomplete="off">
+                    <button id="anon-login-btn">Chat Anonymously</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chat Screen (Hidden by default) -->
+        <div id="chat-screen" class="hidden">
+            <header>
+                <div class="header-left">
+                    <div class="online-indicator"></div>
+                    <h2 id="welcome-msg">School Chat</h2>
+                </div>
+                
+                <div id="user-info">
+                    <div id="user-avatar"></div>
+                    <button id="sign-out-btn">Sign Out</button>
+                </div>
+            </header>
+            
+            <div id="chat-container">
+                <div id="chat-box">
+                    <!-- AI Welcome Message -->
+                    <div class="ai-welcome">
+                        <h4>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/>
+                            </svg>
+                            AI Assistant
+                        </h4>
+                        <p>Hello! I'm your AI assistant. You can ask me questions by typing @AI followed by your question. Try these examples:</p>
+                        <div class="ai-prompt-suggestions">
+                            <button class="ai-prompt-btn" data-prompt="@AI Can you help with math homework?">Math Help</button>
+                            <button class="ai-prompt-btn" data-prompt="@AI Explain photosynthesis">Science</button>
+                            <button class="ai-prompt-btn" data-prompt="@AI What's a good study technique?">Study Tips</button>
+                            <button class="ai-prompt-btn" data-prompt="@AI Write a short poem">Creative</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Messages load here -->
+                    <div class="typing-indicator hidden" id="typing-indicator">
+                        <span>AI Assistant is thinking</span>
+                        <div class="ai-loading"></div>
+                    </div>
+                </div>
+
+                <!-- Fixed Message Form -->
+                <form id="message-form" class="hidden">
+                    <label for="file-input" id="upload-label" title="Upload file">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="m21.44 11.02-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/>
+                        </svg>
+                    </label>
+                    <input type="file" id="file-input">
+                    
+                    <textarea id="message-input" placeholder="Type message, use @AI for assistance, or paste code..." autocomplete="off" rows="1"></textarea>
+                    
+                    <button type="button" id="ai-btn" title="Ask AI">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/>
+                        </svg>
+                    </button>
+                    
+                    <button type="submit" id="send-btn" title="Send">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="m22 2-7 20-4-9-9-4Z"/>
+                            <path d="M22 2 11 13"/>
+                        </svg>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
+
+    <script>
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCtlWmmzMFfShvx7Q_8NZnZ6yWtnD9NNYs",
+            authDomain: "school-f31bd.firebaseapp.com",
+            databaseURL: "https://school-f31bd-default-rtdb.firebaseio.com",
+            projectId: "school-f31bd",
+            storageBucket: "school-f31bd.firebasestorage.app",
+            messagingSenderId: "97414712571",
+            appId: "1:97414712571:web:2f03a80435610098c7f45e"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+
+        // Firebase services
+        const auth = firebase.auth();
+        const db = firebase.database();
+        const storage = firebase.storage();
+
+        // DOM Elements
+        const loginScreen = document.getElementById('login-screen');
+        const chatScreen = document.getElementById('chat-screen');
+        const googleLoginBtn = document.getElementById('google-login-btn');
+        const anonLoginBtn = document.getElementById('anon-login-btn');
+        const anonNameInput = document.getElementById('anon-name-input');
+        const signOutBtn = document.getElementById('sign-out-btn');
+        const messageForm = document.getElementById('message-form');
+        const messageInput = document.getElementById('message-input');
+        const fileInput = document.getElementById('file-input');
+        const chatBox = document.getElementById('chat-box');
+        const welcomeMsg = document.getElementById('welcome-msg');
+        const userAvatar = document.getElementById('user-avatar');
+        const typingIndicator = document.getElementById('typing-indicator');
+        const aiBtn = document.getElementById('ai-btn');
+        const aiPromptBtns = document.querySelectorAll('.ai-prompt-btn');
+        const uploadLabel = document.getElementById('upload-label');
+
+        // Global variables
+        let currentUser = null;
+        let currentDisplayName = "Anonymous";
+
+        // Authentication State Listener
+        auth.onAuthStateChanged((user) => {
+            console.log("Auth state changed:", user);
+            if (user) {
+                currentUser = user;
+                
+                // Set display name
+                if (user.isAnonymous) {
+                    currentDisplayName = anonNameInput.value.trim() || "Anonymous";
+                } else {
+                    currentDisplayName = user.displayName || user.email.split('@')[0] || "User";
+                }
+                
+                // Update UI
+                welcomeMsg.textContent = `School Chat - ${currentDisplayName}`;
+                userAvatar.textContent = currentDisplayName.charAt(0).toUpperCase();
+                
+                // Show chat screen
+                loginScreen.classList.add('hidden');
+                chatScreen.classList.remove('hidden');
+                messageForm.classList.remove('hidden');
+                
+                // Load messages
+                loadMessages();
+                
+            } else {
+                // User signed out
+                currentUser = null;
+                loginScreen.classList.remove('hidden');
+                chatScreen.classList.add('hidden');
+                messageForm.classList.add('hidden');
+                chatBox.innerHTML = '';
+            }
+        });
+
+        // Google Sign In
+        googleLoginBtn.addEventListener('click', () => {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            auth.signInWithPopup(provider)
+                .then((result) => {
+                    console.log("Google sign in successful:", result.user);
+                })
+                .catch((error) => {
+                    console.error("Google sign in error:", error);
+                    alert("Google sign in failed. Please try again.");
+                });
+        });
+
+        // Anonymous Sign In
+        anonLoginBtn.addEventListener('click', () => {
+            const displayName = anonNameInput.value.trim();
+            if (!displayName) {
+                alert("Please enter a display name to chat anonymously.");
+                return;
+            }
+            
+            auth.signInAnonymously()
+                .then((result) => {
+                    console.log("Anonymous sign in successful:", result.user);
+                })
+                .catch((error) => {
+                    console.error("Anonymous sign in error:", error);
+                    alert("Anonymous sign in failed. Please try again.");
+                });
+        });
+
+        // Sign Out
+        signOutBtn.addEventListener('click', () => {
+            auth.signOut()
+                .then(() => {
+                    console.log("User signed out successfully");
+                })
+                .catch((error) => {
+                    console.error("Sign out error:", error);
+                });
+        });
+
+        // AI Prompt Buttons
+        aiPromptBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const prompt = btn.getAttribute('data-prompt');
+                messageInput.value = prompt;
+                messageInput.focus();
+            });
+        });
+
+        // AI Button
+        aiBtn.addEventListener('click', () => {
+            const currentText = messageInput.value.trim();
+            if (currentText) {
+                messageInput.value = `@AI ${currentText}`;
+            } else {
+                messageInput.value = '@AI ';
+            }
+            messageInput.focus();
+        });
+
+        // File Upload
+        uploadLabel.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        fileInput.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            // Check file size (5MB limit)
+            if (file.size > 5 * 1024 * 1024) {
+                alert("File is too large. Please choose a file smaller than 5MB.");
+                return;
+            }
+            
+            uploadFile(file);
+        });
+
+        // Message Input Auto-resize
+        messageInput.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+        });
+
+        // Enter Key to Send (Shift+Enter for new line)
+        messageInput.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendMessage();
+            }
+        });
+
+        // Send Button
+        messageForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+            sendMessage();
+        });
+
+        // Send Message Function
+        function sendMessage() {
+            const text = messageInput.value.trim();
+            if (!text || !currentUser) return;
+
+            const message = {
+                text: text,
+                uid: currentUser.uid,
+                displayName: currentDisplayName,
+                timestamp: Date.now(),
+                type: text.startsWith("```") && text.endsWith("```") ? "code" : "text"
+            };
+
+            // Save to Firebase
+            db.ref('messages').push(message)
+                .then(() => {
+                    console.log("Message sent successfully");
+                    messageInput.value = '';
+                    messageInput.style.height = 'auto';
+                    
+                    // Trigger AI response if needed
+                    if (text.includes('@AI')) {
+                        triggerAIResponse(text);
+                    }
+                })
+                .catch((error) => {
+                    console.error("Error sending message:", error);
+                    alert("Failed to send message. Please try again.");
+                });
+        }
+
+        // Load Messages
+        function loadMessages() {
+            // Clear existing messages first
+            chatBox.innerHTML = '';
+            
+            // Add AI welcome message back
+            const aiWelcome = document.querySelector('.ai-welcome');
+            if (aiWelcome) {
+                chatBox.appendChild(aiWelcome);
+            }
+            
+            db.ref('messages').limitToLast(50).on('child_added', (snapshot) => {
+                const message = snapshot.val();
+                displayMessage(message);
+            });
+        }
+
+        // Display Message - FIXED SCROLLING
+        function displayMessage(msg) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message';
+            
+            if (msg.uid === currentUser?.uid) {
+                messageDiv.classList.add('mine');
+            } else if (msg.uid === 'ai-bot') {
+                messageDiv.classList.add('ai');
+            }
+
+            // Sender info
+            const senderDiv = document.createElement('div');
+            senderDiv.className = 'sender';
+            senderDiv.textContent = msg.uid === currentUser?.uid ? 'You' : msg.displayName;
+            messageDiv.appendChild(senderDiv);
+
+            // Message content
+            const contentDiv = document.createElement('div');
+            
+            if (msg.type === 'code') {
+                const codeBlock = document.createElement('div');
+                codeBlock.className = 'code-block';
+                
+                const codeHeader = document.createElement('div');
+                codeHeader.className = 'code-header';
+                codeHeader.innerHTML = '<span>Code</span><button class="copy-btn">Copy</button>';
+                
+                const pre = document.createElement('pre');
+                const code = document.createElement('code');
+                code.textContent = msg.text.substring(3, msg.text.length - 3).trim();
+                pre.appendChild(code);
+                
+                codeBlock.appendChild(codeHeader);
+                codeBlock.appendChild(pre);
+                contentDiv.appendChild(codeBlock);
+                
+                // Copy functionality
+                const copyBtn = codeHeader.querySelector('.copy-btn');
+                copyBtn.addEventListener('click', () => {
+                    navigator.clipboard.writeText(code.textContent)
+                        .then(() => {
+                            copyBtn.textContent = 'Copied!';
+                            copyBtn.classList.add('copied');
+                            setTimeout(() => {
+                                copyBtn.textContent = 'Copy';
+                                copyBtn.classList.remove('copied');
+                            }, 2000);
+                        });
+                });
+            } else {
+                contentDiv.className = 'text';
+                contentDiv.textContent = msg.text;
+            }
+            
+            messageDiv.appendChild(contentDiv);
+
+            // Timestamp
+            const timestampDiv = document.createElement('div');
+            timestampDiv.className = 'timestamp';
+            timestampDiv.textContent = new Date(msg.timestamp).toLocaleTimeString([], { 
+                hour: '2-digit', 
+                minute: '2-digit' 
+            });
+            messageDiv.appendChild(timestampDiv);
+
+            chatBox.appendChild(messageDiv);
+            
+            // FIXED: Auto-scroll to bottom
+            setTimeout(() => {
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }, 100);
+        }
+
+        // Upload File
+        function uploadFile(file) {
+            if (!currentUser) return;
+
+            const storageRef = storage.ref();
+            const fileRef = storageRef.child(`uploads/${currentUser.uid}/${Date.now()}_${file.name}`);
+            
+            fileRef.put(file)
+                .then((snapshot) => {
+                    return snapshot.ref.getDownloadURL();
+                })
+                .then((downloadURL) => {
+                    const message = {
+                        type: 'file',
+                        fileName: file.name,
+                        fileURL: downloadURL,
+                        uid: currentUser.uid,
+                        displayName: currentDisplayName,
+                        timestamp: Date.now()
+                    };
+                    return db.ref('messages').push(message);
+                })
+                .then(() => {
+                    console.log("File uploaded successfully");
+                })
+                .catch((error) => {
+                    console.error("File upload error:", error);
+                    alert("File upload failed. Please try again.");
+                });
+        }
+
+        // AI Response
+        async function triggerAIResponse(userMessage) {
+            typingIndicator.classList.remove('hidden');
+            
+            try {
+                const apiKey = "AIzaSyC9YimX0vh91uX41mTLAA815IWDC8fgSOQ";
+                const question = userMessage.replace(/@AI\s*/i, '').trim();
+                
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        contents: [{
+                            parts: [{
+                                text: `You are a helpful AI assistant for students. Answer this question in a friendly, educational way: ${question}`
+                            }]
+                        }]
+                    })
+                });
+
+                if (!response.ok) throw new Error('API request failed');
+
+                const data = await response.json();
+                let aiResponse = "I'm sorry, I couldn't generate a response. Please try again.";
+
+                if (data.candidates?.[0]?.content?.parts?.[0]?.text) {
+                    aiResponse = data.candidates[0].content.parts[0].text;
+                }
+
+                // Save AI response to Firebase
+                const aiMessage = {
+                    text: aiResponse,
+                    uid: 'ai-bot',
+                    displayName: 'AI Assistant',
+                    timestamp: Date.now(),
+                    type: 'text',
+                    isAI: true
+                };
+
+                await db.ref('messages').push(aiMessage);
+
+            } catch (error) {
+                console.error("AI API Error:", error);
+                
+                // Fallback response
+                const fallbackMessage = {
+                    text: "I'm having trouble connecting right now. Please try again in a moment.",
+                    uid: 'ai-bot',
+                    displayName: 'AI Assistant',
+                    timestamp: Date.now(),
+                    type: 'text',
+                    isAI: true
+                };
+                
+                await db.ref('messages').push(fallbackMessage);
+            } finally {
+                typingIndicator.classList.add('hidden');
+            }
+        }
+
+        // Initialize the app
+        console.log("School Chat initialized");
+    </script>
 </body>
 </html>
