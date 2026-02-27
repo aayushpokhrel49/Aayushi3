@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-900 text-white p-5">
+    <div class="max-w-md mx-auto bg-slate-800 rounded-xl shadow-lg p-6">
+        <div class="flex justify-between mb-4">
+            <h2 class="text-xl font-bold">Puter AI</h2>
+            <span id="status" class="text-xs bg-red-900 px-2 py-1 rounded text-red-200">Disconnected</span>
+        </div>
+
+        <select id="model-id" class="w-full mb-4 p-2 bg-slate-700 rounded border border-slate-600 outline-none">
+            <option value="gpt-5-nano">GPT-5 Nano</option>
+            <option value="claude-opus-4.6">Claude Opus 4.6 (Newest)</option>
+            <option value="deepseek-chat">DeepSeek Chat</option>
+            <option value="gemini-3-pro">Gemini 3 Pro</option>
+        </select>
+
+        <div id="logs" class="h-64 overflow-y-auto mb-4 p-3 bg-slate-900 rounded text-sm border border-slate-700"></div>
+
+        <div class="flex gap-2">
+            <input id="msg" type="text" placeholder="Ask anything..." class="flex-1 p-2 bg-slate-700 rounded outline-none border border-slate-600 focus:border-blue-500">
+            <button onclick="askAI()" class="bg-blue-600 px-4 py-2 rounded font-bold hover:bg-blue-500">Send</button>
+        </div>
+    </div>
+
+    <script>
+        const logs = document.getElementById('logs');
+        const status = document.getElementById('status');
+
+        // Check if Puter is ready
+        setInterval(() => {
+            if (window.puter && puter.auth.isSignedIn()) {
+                status.innerText = "Connected";
+                status.className = "text-xs bg-green-900 px-2 py-1 rounded text-green-200";
+            }
+        }, 1000);
+
+        async function askAI() {
+            const prompt = document.getElementById('msg').value;
+            const model = document.getElementById('model-id').value;
+            if(!prompt) return;
+
+            logs.innerHTML += `<div class="text-blue-400 mb-2"><b>You:</b> ${prompt}</div>`;
+            document.getElementById('msg').value = '';
+
+            try {
+                // Latest Puter.js 2.0 Syntax
+                const response = await puter.ai.chat(prompt, { model: model });
+                logs.innerHTML += `<div class="mb-4"><b>AI:</b> ${response}</div>`;
+            } catch (err) {
+                logs.innerHTML += `<div class="text-red-400">Error: ${err.message}</div>`;
+            }
+            logs.scrollTop = logs.scrollHeight;
+        }
+    </script>
+</body>
+</html>
