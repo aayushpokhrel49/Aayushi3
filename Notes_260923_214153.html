@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Official Peace Agreement 💖</title>
+<style>
+• { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+min-height: 100vh;
+display: flex;
+align-items: center;
+justify-content: center;
+padding: 20px;
+background: linear-gradient(135deg, #ffd6e8 0%, #e0c3fc 50%, #c3dafe 100%);
+background-attachment: fixed;
+overflow-x: hidden;
+position: relative;
+}
+
+/* floating hearts */
+.heart {
+position: fixed;
+bottom: -60px;
+font-size: 22px;
+opacity: 0.5;
+animation: floatUp linear infinite;
+pointer-events: none;
+z-index: 0;
+}
+@keyframes floatUp {
+to { transform: translateY(-110vh) rotate(360deg); opacity: 0; }
+}
+
+.card {
+position: relative;
+z-index: 1;
+width: 100%;
+max-width: 560px;
+background: rgba(255, 255, 255, 0.88);
+backdrop-filter: blur(14px);
+border-radius: 26px;
+padding: 32px 28px;
+box-shadow: 0 20px 60px rgba(180, 100, 160, 0.28);
+border: 2px solid rgba(255, 255, 255, 0.9);
+animation: pop 0.5s ease;
+}
+@keyframes pop {
+from { transform: scale(0.94); opacity: 0; }
+to { transform: scale(1); opacity: 1; }
+}
+
+.badge {
+display: inline-block;
+background: #ffe3f0;
+color: #c2185b;
+font-size: 11px;
+font-weight: 700;
+letter-spacing: 1.4px;
+padding: 6px 14px;
+border-radius: 999px;
+text-transform: uppercase;
+}
+
+h1 {
+font-size: 27px;
+color: #4a1e4d;
+margin: 14px 0 6px;
+line-height: 1.25;
+}
+
+.sub {
+color: #8a6b8e;
+font-size: 14px;
+margin-bottom: 20px;
+line-height: 1.5;
+}
+
+.meta {
+display: flex;
+gap: 10px;
+flex-wrap: wrap;
+margin-bottom: 22px;
+}
+.meta div {
+flex: 1;
+min-width: 130px;
+background: #fdf2f8;
+border: 1px dashed #f0b6d4;
+border-radius: 12px;
+padding: 10px 14px;
+font-size: 12.5px;
+color: #a3568a;
+}
+.meta strong { display: block; color: #6d2b5e; font-size: 13.5px; margin-top: 3px; }
+
+h2 {
+font-size: 13px;
+letter-spacing: 1.6px;
+text-transform: uppercase;
+color: #b06ab3;
+margin-bottom: 12px;
+}
+
+.terms {
+list-style: none;
+max-height: 290px;
+overflow-y: auto;
+padding-right: 6px;
+margin-bottom: 20px;
+}
+.terms::-webkit-scrollbar { width: 6px; }
+.terms::-webkit-scrollbar-thumb { background: #f0b6d4; border-radius: 10px; }
+
+.terms li {
+display: flex;
+gap: 11px;
+padding: 10px 12px;
+border-radius: 12px;
+font-size: 14px;
+line-height: 1.5;
+color: #4d3a52;
+transition: background 0.2s;
+}
+.terms li:hover { background: #fdf2f8; }
+
+.num {
+flex-shrink: 0;
+width: 22px;
+height: 22px;
+border-radius: 50%;
+background: linear-gradient(135deg, #ff8fc8, #b06ab3);
+color: #fff;
+font-size: 11px;
+font-weight: 700;
+display: grid;
+place-items: center;
+margin-top: 1px;
+}
+
+.terms li.highlight {
+background: #fff6fb;
+border: 1px solid #ffd9ec;
+}
+
+.agree-row {
+display: flex;
+align-items: flex-start;
+gap: 11px;
+background: #f7f0ff;
+border: 1.5px solid #e3cdf7;
+border-radius: 14px;
+padding: 14px;
+margin-bottom: 16px;
+cursor: pointer;
+}
+.agree-row input {
+width: 20px; height: 20px;
+accent-color: #b06ab3;
+margin-top: 1px;
+cursor: pointer;
+flex-shrink: 0;
+}
+.agree-row span { font-size: 13.5px; color: #5a4363; line-height: 1.45; }
+
+label.field {
+display: block;
+font-size: 12px;
+font-weight: 700;
+letter-spacing: 1px;
+text-transform: uppercase;
+color: #b06ab3;
+margin-bottom: 7px;
+}
+input[type="text"] {
+width: 100%;
+padding: 13px 15px;
+border-radius: 13px;
+border: 1.5px solid #e8d4f0;
+background: #fff;
+font-size: 15px;
+font-family: 'Segoe Script', 'Brush Script MT', cursive;
+color: #4a1e4d;
+outline: none;
+transition: border 0.2s, box-shadow 0.2s;
+margin-bottom: 20px;
+}
+input[type="text"]:focus {
+border-color: #b06ab3;
+box-shadow: 0 0 0 4px rgba(176, 106, 179, 0.14);
+}
+
+.buttons { display: flex; gap: 10px; }
+
+button {
+font-family: inherit;
+font-size: 15px;
+font-weight: 700;
+border: none;
+border-radius: 14px;
+padding: 15px 20px;
+cursor: pointer;
+transition: transform 0.15s, box-shadow 0.2s, opacity 0.2s;
+}
+button:active { transform: scale(0.97); }
+
+#signBtn {
+flex: 1;
+background: linear-gradient(135deg, #ff6fb5, #b06ab3);
+color: #fff;
+box-shadow: 0 8px 22px rgba(200, 90, 160, 0.4);
+}
+#signBtn:disabled {
+opacity: 0.4;
+cursor: not-allowed;
+box-shadow: none;
+}
+
+#declineBtn {
+background: #f3eaf7;
+color: #8a6b8e;
+padding: 15px 18px;
+}
+
+.note {
+margin-top: 16px;
+font-size: 12px;
+color: #a08ba8;
+text-align: center;
+line-height: 1.5;
+}
+
+/* certificate */
+#certificate { display: none; text-align: center; }
+#certificate .seal {
+font-size: 54px;
+margin-bottom: 8px;
+animation: pop 0.6s ease;
+}
+#certificate h1 { font-size: 25px; }
+.cert-name {
+font-family: 'Segoe Script', 'Brush Script MT', cursive;
+font-size: 30px;
+color: #b06ab3;
+margin: 14px 0;
+word-break: break-word;
+}
+.stamp {
+display: inline-block;
+margin: 16px 0 10px;
+border: 3px solid #43a047;
+color: #43a047;
+font-weight: 800;
+letter-spacing: 2px;
+padding: 9px 22px;
+border-radius: 10px;
+transform: rotate(-6deg);
+font-size: 15px;
+animation: pop 0.5s ease 0.2s backwards;
+}
+.cert-foot {
+font-size: 13px;
+color: #8a6b8e;
+line-height: 1.6;
+margin-top: 14px;
+}
+.divider {
+height: 1px;
+background: linear-gradient(90deg, transparent, #e3cdf7, transparent);
+margin: 18px 0;
+}
+
+@media (max-width: 480px) {
+.card { padding: 24px 18px; border-radius: 22px; }
+h1 { font-size: 22px; }
+.buttons { flex-direction: column; }
+}
+</style>
+</head>
+<body>
+
+<div class="card">
+<!-- ===== AGREEMENT VIEW ===== -->
+<div id="agreement">
+<span class="badge">Legal-ish Document</span>
+<h1>Official Sleep-Time Peace Agreement 🕊️</h1>
+<p class="sub">
+An agreement regarding late-night texts, past mistakes, and the phrase
+<em>"I'm going to sleep."</em>
+</p>
+
+<div class="meta">
+<div>Effective from<strong id="today"></strong></div>
+<div>Valid until<strong>Both are sleepy & happy</strong></div>
+</div>
+
+<h2>Terms & Conditions</h2>
+<ol class="terms">
+<li><span class="num">1</span><span>"I'm going to sleep" shall be taken at face value. It is not a coded message, a trap, or a test.</span></li>
+<li class="highlight"><span class="num">2</span><span>Mistakes made in the past shall be considered <strong>archived</strong>. Reopening old files requires a written request and a snack.</span></li>
+<li class="highlight"><span class="num">3</span><span>Anger shall have an expiry time of <strong>30 minutes</strong>. Extensions only with a valid, clearly explained reason.</span></li>
+<li><span class="num">4</span><span>No silent treatment lasting longer than one (1) sleep cycle.</span></li>
+<li><span class="num">5</span><span>"I'm fine" must mean actually fine. If not fine, it must be said with words, not vibes.</span></li>
+<li><span class="num">6</span><span>Any mistake shall be mentioned <strong>once</strong>, calmly, and then released into the wild. No repeat episodes.</span></li>
+<li><span class="num">7</span><span>Hugs, snacks, and terrible jokes are valid peace offerings and cannot be rejected.</span></li>
+<li><span class="num">8</span><span>Nothing shall be discussed after 11 PM that could have been discussed at 11 AM.</span></li>
+<li><span class="num">9</span><span>This agreement applies to <strong>both parties equally</strong>. Nobody is exempt. Not even the one who made this website.</span></li>
+<li><span class="num">10</span><span>Love remains non-negotiable and is not subject to any of the above clauses.</span></li>
+</ol>
+
+<label class="agree-row">
+<input type="checkbox" id="agree">
+<span>I have read all the terms above and I agree to them voluntarily. No one forced me. (Okay, maybe slightly.)</span>
+</label>
+
+<label class="field" for="name">Signature</label>
+<input type="text" id="name" placeholder="Type your name here..." autocomplete="off">
+
+<div class="buttons">
+<button id="signBtn" disabled>Sign & Accept 💕</button>
+<button id="declineBtn">Decline</button>
+</div>
+
+<p class="note">This document has no legal value whatsoever. It has emotional value though. 💗</p>
+</div>
+
+<!-- ===== CERTIFICATE VIEW ===== -->
+<div id="certificate">
+<div class="seal">🕊️</div>
+<span class="badge">Certified & Sealed</span>
+<h1>Peace Agreement Signed</h1>
+<div class="cert-name" id="certName"></div>
+<div class="stamp">ACTIVE</div>
+<div class="divider"></div>
+<p class="cert-foot">
+Signed on <strong id="certDate"></strong><br>
+Status: <strong>Anger-free, mistake-free, sleepy</strong><br><br>
+Now go to sleep. For real this time. 😴
+</p>
+</div>
+</div>
+
+<script>
+/* ---- date ---- */
+const today = new Date().toLocaleDateString('en-GB', {
+day: 'numeric', month: 'short', year: 'numeric'
+});
+document.getElementById('today').textContent = today;
+document.getElementById('certDate').textContent = today;
+
+/* ---- enable button ---- */
+const agreeBox = document.getElementById('agree');
+const nameInput = document.getElementById('name');
+const signBtn = document.getElementById('signBtn');
+
+function checkForm() {
+signBtn.disabled = !(agreeBox.checked && nameInput.value.trim().length > 1);
+}
+agreeBox.addEventListener('change', checkForm);
+nameInput.addEventListener('input', checkForm);
+
+/* ---- sign ---- */
+signBtn.addEventListener('click', () => {
+const name = nameInput.value.trim();
+document.getElementById('certName').textContent = name;
+document.getElementById('agreement').style.display = 'none';
+document.getElementById('certificate').style.display = 'block';
+confetti();
+});
+
+/* ---- decline (funny) ---- */
+const declineBtn = document.getElementById('declineBtn');
+const declineTexts = [
+"Error 404: Decline option not found 😌",
+"Nice try. This button is decorative 💅",
+"Declining is not covered in the terms.",
+"Request rejected by the management 💖"
+ ];
+let d = 0;
+declineBtn.addEventListener('click', () => {
+declineBtn.textContent = declineTexts[d % declineTexts.length];
+d++;
+setTimeout(() => { declineBtn.textContent = "Decline"; }, 2200);
+});
+
+/* ---- heart confetti ---- */
+function confetti() {
+const emojis = ['💖', '💕', '✨', '🌸', '💗', '🕊️'];
+for (let i = 0; i < 40; i++) {
+const el = document.createElement('div');
+el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+el.style.cssText = position: fixed; left: ${Math.random() * 100}vw;
+top: -40px;
+font-size: ${14 + Math.random() * 18}px; z-index: 999; pointer-events: none; transition: transform ${2.5 + Math.random() * 2}s linear, opacity ${2.5 + Math.random() * 2}s linear;;
+document.body.appendChild(el);
+requestAnimationFrame(() => {
+el.style.transform = translateY(${window.innerHeight + 120}px) rotate(${Math.random() * 720 - 360}deg);
+el.style.opacity = '0';
+});
+setTimeout(() => el.remove(), 5000);
+}
+}
+
+/* ---- background floating hearts ---- */
+const bgEmojis = ['💗', '💜', '🤍', '💖'];
+for (let i = 0; i < 12; i++) {
+const h = document.createElement('div');
+h.className = 'heart';
+h.textContent = bgEmojis[i % bgEmojis.length];
+h.style.left = Math.random() * 100 + 'vw';
+h.style.animationDuration = (9 + Math.random() * 9) + 's';
+h.style.animationDelay = (Math.random() * 10) + 's';
+h.style.fontSize = (14 + Math.random() * 16) + 'px';
+document.body.appendChild(h);
+}
+</script>
+</body>
+</html>
