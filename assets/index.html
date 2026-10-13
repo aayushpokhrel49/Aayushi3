@@ -3,29 +3,27 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>OAuth Login</title>
+<title>OAuth Test</title>
 <style>
-  * { box-sizing: border-box; }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   body {
     font-family: system-ui, -apple-system, sans-serif;
     margin: 0;
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     padding: 1rem;
     background: #f0f2f5;
+    min-height: 100vh;
   }
   .card {
     background: #fff;
-    padding: 1.75rem;
+    padding: 1.25rem;
     border-radius: 12px;
-    box-shadow: 0 8px 24px rgba(0,0,0,.08);
-    max-width: 520px;
-    width: 100%;
+    box-shadow: 0 4px 12px rgba(0,0,0,.08);
+    max-width: 640px;
+    margin: 0 auto 1rem;
   }
-  h1 { margin: 0 0 .5rem; font-size: 1.5rem; }
-  p  { color: #555; margin: 0 0 1.25rem; }
+  h1 { margin: 0 0 .75rem; font-size: 1.25rem; }
+  h2 { font-size: .95rem; margin: 1rem 0 .35rem; color: #333; }
+  p  { color: #555; margin: 0 0 1rem; font-size: 14px; }
   button {
     width: 100%;
     padding: 14px;
@@ -36,51 +34,114 @@
     color: #fff;
     cursor: pointer;
     font-weight: 600;
+    margin-bottom: .5rem;
   }
   button:hover { background: #0b5ed7; }
-  button:disabled { background: #94b8ef; cursor: not-allowed; }
-  button.secondary {
-    background: #dc3545;
-    margin-top: .75rem;
-  }
-  button.secondary:hover { background: #bb2d3b; }
-  .status { margin: .75rem 0; font-weight: 600; }
-  .status.ok    { color: #198754; }
-  .status.error { color: #dc3545; }
-  pre {
-    background: #f6f8fa;
-    padding: .85rem;
+  button.secondary { background: #6c757d; }
+  button.secondary:hover { background: #5a6268; }
+  button.danger { background: #dc3545; }
+  button.danger:hover { background: #bb2d3b; }
+
+  .banner {
+    padding: .85rem 1rem;
     border-radius: 8px;
+    margin-bottom: .75rem;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 1.4;
+    word-break: break-word;
+  }
+  .banner.info  { background: #cfe2ff; color: #084298; }
+  .banner.ok    { background: #d1e7dd; color: #0f5132; }
+  .banner.error { background: #f8d7da; color: #842029; }
+  .banner.warn  { background: #fff3cd; color: #664d03; }
+
+  pre, .kv {
+    background: #f6f8fa;
+    border: 1px solid #e1e4e8;
+    padding: .75rem;
+    border-radius: 8px;
+    font-size: 11px;
+    line-height: 1.5;
     overflow-x: auto;
     white-space: pre-wrap;
-    word-break: break-word;
-    font-size: 12px;
-    margin: .5rem 0 0;
+    word-break: break-all;
+    margin: .25rem 0 0;
+    font-family: ui-monospace, Menlo, Consolas, monospace;
+    color: #24292f;
   }
-  h2 { font-size: 1rem; margin: 1rem 0 .25rem; }
-  .hidden { display: none; }
+  .kv b { color: #0550ae; }
+
+  .section { margin-top: 1rem; }
+  .hidden { display: none !important; }
+  .log {
+    max-height: 240px;
+    overflow-y: auto;
+    background: #1e1e1e;
+    color: #d4d4d4;
+    padding: .75rem;
+    border-radius: 8px;
+    font-size: 11px;
+    font-family: ui-monospace, Menlo, Consolas, monospace;
+    line-height: 1.6;
+  }
+  .log .e { color: #f48771; }
+  .log .w { color: #dcdcaa; }
+  .log .i { color: #9cdcfe; }
+  .log .s { color: #6a9955; }
+  .log div { word-break: break-all; margin-bottom: 2px; }
 </style>
 </head>
 <body>
+
 <div class="card">
-  <h1>OAuth Test</h1>
-  <p id="intro">Sign in with your OAuth provider to test the flow.</p>
+  <h1>OAuth Test Panel</h1>
+  <p>All errors and debug info appear below — no console needed.</p>
 
   <div id="loginView">
     <button id="loginBtn">Login with OAuth</button>
   </div>
 
   <div id="callbackView" class="hidden">
-    <div id="status" class="status">Processing login...</div>
+    <div id="statusBanner" class="banner info">Processing...</div>
     <div id="output"></div>
-    <button id="revokeBtn" class="secondary hidden">Revoke access token</button>
-    <button id="startOverBtn" class="secondary hidden">Start over</button>
+    <button id="revokeBtn" class="secondary hidden">Revoke Token</button>
+    <button id="startOverBtn" class="danger">Start Over</button>
   </div>
+</div>
+
+<!-- Debug panel always visible -->
+<div class="card">
+  <h2 style="margin-top:0;">Debug Info</h2>
+
+  <h2>Current Page</h2>
+  <div class="kv" id="dbgPage">—</div>
+
+  <h2>Config (what will be sent)</h2>
+  <div class="kv" id="dbgConfig">—</div>
+
+  <h2>Storage Values</h2>
+  <div class="kv" id="dbgStorage">—</div>
+
+  <h2>URL Params Received</h2>
+  <div class="kv" id="dbgParams">—</div>
+
+  <h2>Last Authorize URL Sent</h2>
+  <div class="kv" id="dbgAuthUrl">—</div>
+
+  <h2>Server Response (last)</h2>
+  <div class="kv" id="dbgServer">—</div>
+
+  <h2>Activity Log</h2>
+  <div class="log" id="dbgLog"></div>
+
+  <button id="clearLogBtn" class="secondary" style="margin-top:.5rem;">Clear Log</button>
+  <button id="copyReportBtn" class="secondary">Copy Full Report</button>
 </div>
 
 <script>
 /* ============================================================
-   OAuth configuration
+   CONFIG
    ============================================================ */
 const CLIENT_ID          = '92a9f588765598039a0710bfbf8c4ef2';
 const REDIRECT_URI       = 'https://aayushpokhrel49.github.io/Aayushi3/assets/index.html';
@@ -91,16 +152,31 @@ const REVOKE_ENDPOINT    = 'http://betawebsite.gt.tc/api/oauth/revoke';
 const SCOPES             = 'openid profile email';
 
 /* ============================================================
-   Element refs
+   ON-SCREEN LOGGER
    ============================================================ */
-const loginView    = document.getElementById('loginView');
-const callbackView = document.getElementById('callbackView');
-const statusEl     = document.getElementById('status');
-const outputEl     = document.getElementById('output');
-const revokeBtn    = document.getElementById('revokeBtn');
-const startOverBtn = document.getElementById('startOverBtn');
+const logEl = document.getElementById('dbgLog');
+const logLines = [];
 
-let accessToken = null;
+function log(msg, kind = 'i') {
+  const time = new Date().toLocaleTimeString();
+  const line = `[${time}] ${msg}`;
+  logLines.push({ time, msg, kind });
+  const div = document.createElement('div');
+  div.className = kind;
+  div.textContent = `[${time}] ${msg}`;
+  logEl.appendChild(div);
+  logEl.scrollTop = logEl.scrollHeight;
+}
+
+function setKV(id, text) {
+  document.getElementById(id).textContent = text;
+}
+
+function setStatusBanner(msg, kind) {
+  const el = document.getElementById('statusBanner');
+  el.textContent = msg;
+  el.className = 'banner ' + kind;
+}
 
 /* ============================================================
    Helpers
@@ -112,26 +188,54 @@ function base64UrlEncode(buffer) {
 async function sha256(plain) {
   return crypto.subtle.digest('SHA-256', new TextEncoder().encode(plain));
 }
-function randomString(length = 64) {
-  const bytes = new Uint8Array(length);
+function randomString(len = 64) {
+  const bytes = new Uint8Array(len);
   crypto.getRandomValues(bytes);
   return Array.from(bytes, b => b.toString(16).padStart(2, '0')).join('');
 }
-function setStatus(msg, kind = '') {
-  statusEl.textContent = msg;
-  statusEl.className = 'status ' + kind;
-}
-function showCallbackView() {
-  loginView.classList.add('hidden');
-  callbackView.classList.remove('hidden');
-  document.getElementById('intro').classList.add('hidden');
+
+function refreshDebug() {
+  setKV('dbgPage', window.location.href);
+
+  setKV('dbgConfig',
+    `CLIENT_ID: ${CLIENT_ID}\n` +
+    `REDIRECT_URI: ${REDIRECT_URI}\n` +
+    `AUTHORIZE: ${AUTHORIZE_ENDPOINT}\n` +
+    `TOKEN: ${TOKEN_ENDPOINT}\n` +
+    `USERINFO: ${USERINFO_ENDPOINT}\n` +
+    `SCOPES: ${SCOPES}`
+  );
+
+  setKV('dbgStorage',
+    `sessionStorage.oauth_state: ${sessionStorage.getItem('oauth_state') || '(none)'}\n` +
+    `sessionStorage.pkce_code_verifier: ${sessionStorage.getItem('pkce_code_verifier') ? '(present, ' + sessionStorage.getItem('pkce_code_verifier').length + ' chars)' : '(none)'}\n` +
+    `localStorage.oauth_state: ${localStorage.getItem('oauth_state') || '(none)'}\n` +
+    `localStorage.pkce_code_verifier: ${localStorage.getItem('pkce_code_verifier') ? '(present)' : '(none)'}`
+  );
+
+  const params = new URLSearchParams(window.location.search);
+  const p = {};
+  for (const [k, v] of params) p[k] = v;
+  setKV('dbgParams', JSON.stringify(p, null, 2));
 }
 
 /* ============================================================
-   Step 1 — Start the OAuth flow
+   VIEW SWITCHING
+   ============================================================ */
+const loginView    = document.getElementById('loginView');
+const callbackView = document.getElementById('callbackView');
+
+function showCallbackView() {
+  loginView.classList.add('hidden');
+  callbackView.classList.remove('hidden');
+}
+
+/* ============================================================
+   STEP 1 — Start login
    ============================================================ */
 document.getElementById('loginBtn').addEventListener('click', async () => {
   try {
+    log('Generating PKCE + state...');
     const codeVerifier  = randomString(64);
     const codeChallenge = base64UrlEncode(await sha256(codeVerifier));
     const state         = randomString(32);
@@ -140,6 +244,11 @@ document.getElementById('loginBtn').addEventListener('click', async () => {
     sessionStorage.setItem('oauth_state', state);
     localStorage.setItem('pkce_code_verifier', codeVerifier);
     localStorage.setItem('oauth_state', state);
+
+    log('Generated state: ' + state);
+    log('Generated code_verifier (first 12): ' + codeVerifier.slice(0, 12) + '...', 's');
+    log('Generated code_challenge: ' + codeChallenge, 's');
+    refreshDebug();
 
     const url = new URL(AUTHORIZE_ENDPOINT);
     url.searchParams.set('response_type', 'code');
@@ -150,157 +259,261 @@ document.getElementById('loginBtn').addEventListener('click', async () => {
     url.searchParams.set('code_challenge', codeChallenge);
     url.searchParams.set('code_challenge_method', 'S256');
 
-    window.location.href = url.toString();
+    const finalUrl = url.toString();
+    setKV('dbgAuthUrl', finalUrl);
+    log('Redirecting to authorize endpoint...');
+    log(finalUrl, 's');
+
+    // tiny delay so user can see the log before navigation
+    setTimeout(() => { window.location.href = finalUrl; }, 400);
   } catch (err) {
-    alert('Failed to start login: ' + err.message);
+    log('ERROR starting login: ' + err.message, 'e');
+    alert('Error starting login: ' + err.message);
   }
 });
 
 /* ============================================================
-   Step 2 — Handle callback (if ?code= is in the URL)
+   STEP 2 — Callback (if code or error in URL)
    ============================================================ */
-(async function handleCallbackIfPresent() {
+(async function handleCallback() {
+  refreshDebug();
+
   const params = new URLSearchParams(window.location.search);
   const code   = params.get('code');
   const state  = params.get('state');
   const error  = params.get('error');
+  const errDesc = params.get('error_description');
 
-  // If no code/error in URL → this is the login page. Do nothing.
-  if (!code && !error) return;
+  log('Page loaded. URL params parsed.', 'i');
+
+  if (!code && !error) {
+    log('No code or error in URL → showing login view.', 'i');
+    return;
+  }
 
   showCallbackView();
 
   if (error) {
-    setStatus(`Authorization error: ${error}`, 'error');
-    startOverBtn.classList.remove('hidden');
+    log('Server returned error: ' + error + ' — ' + (errDesc || ''), 'e');
+    setStatusBanner('Authorization error: ' + error + (errDesc ? ' — ' + errDesc : ''), 'error');
     return;
   }
 
-  // Verify state
+  log('Got authorization code: ' + code, 's');
+
   const storedState = sessionStorage.getItem('oauth_state') || localStorage.getItem('oauth_state');
-  if (!storedState || state !== storedState) {
-    setStatus(
-      `State mismatch.\nURL state: ${state}\nStored: ${storedState || '(none)'}`,
+  log('URL state: ' + state, 'i');
+  log('Stored state: ' + (storedState || '(none)'), 'i');
+
+  if (!storedState) {
+    log('No stored state found. This happens if the callback was opened directly or storage was cleared.', 'e');
+    setStatusBanner(
+      'State missing from storage. You must start the login from the main page — don\'t open the callback URL directly.',
       'error'
     );
-    startOverBtn.classList.remove('hidden');
+    refreshDebug();
     return;
   }
 
-  // Get PKCE verifier
-  const codeVerifier =
-    sessionStorage.getItem('pkce_code_verifier') ||
-    localStorage.getItem('pkce_code_verifier');
+  if (state !== storedState) {
+    log('STATE MISMATCH!', 'e');
+    log('URL state:    ' + state, 'e');
+    log('Stored state: ' + storedState, 'e');
+    setStatusBanner(
+      'State mismatch.\nURL state: ' + state + '\nStored: ' + storedState + '\n\nServer is likely not echoing your state back. Check server logs.',
+      'error'
+    );
+    refreshDebug();
+    return;
+  }
 
+  log('State verified ✓', 's');
+
+  const codeVerifier = sessionStorage.getItem('pkce_code_verifier') || localStorage.getItem('pkce_code_verifier');
   if (!codeVerifier) {
-    setStatus('PKCE code_verifier missing. Try logging in again.', 'error');
-    startOverBtn.classList.remove('hidden');
+    log('PKCE code_verifier missing from storage.', 'e');
+    setStatusBanner('PKCE code_verifier missing. Try logging in again.', 'error');
     return;
   }
+  log('PKCE code_verifier found ✓', 's');
 
-  // Clean up one-time values
+  // Clean one-time values
   sessionStorage.removeItem('oauth_state');
   sessionStorage.removeItem('pkce_code_verifier');
   localStorage.removeItem('oauth_state');
   localStorage.removeItem('pkce_code_verifier');
+  refreshDebug();
 
   try {
-    // Exchange code for token
-    setStatus('Exchanging code for token...');
+    // ---- Token exchange ----
+    setStatusBanner('Exchanging code for token...', 'info');
+    log('POST ' + TOKEN_ENDPOINT, 'i');
+
+    const body = new URLSearchParams({
+      grant_type:    'authorization_code',
+      code:          code,
+      redirect_uri:  REDIRECT_URI,
+      client_id:     CLIENT_ID,
+      code_verifier: codeVerifier
+    });
+
+    log('Token request body: ' + body.toString(), 's');
+
     const tokenRes = await fetch(TOKEN_ENDPOINT, {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: new URLSearchParams({
-        grant_type:   'authorization_code',
-        code,
-        redirect_uri: REDIRECT_URI,
-        client_id:    CLIENT_ID,
-        code_verifier: codeVerifier
-      })
+      body
     });
 
     const tokenText = await tokenRes.text();
+    log('Token response status: ' + tokenRes.status, tokenRes.ok ? 's' : 'e');
+    log('Token response body: ' + tokenText, tokenRes.ok ? 's' : 'e');
+
+    setKV('dbgServer', 'TOKEN ENDPOINT\nStatus: ' + tokenRes.status + '\nBody:\n' + tokenText);
+
     if (!tokenRes.ok) {
-      throw new Error(`Token exchange failed (${tokenRes.status}): ${tokenText}`);
+      throw new Error('Token exchange failed (' + tokenRes.status + '): ' + tokenText);
     }
-    const tokenData = JSON.parse(tokenText);
-    accessToken = tokenData.access_token;
-    if (!accessToken) throw new Error('No access_token in response.');
 
-    // Fetch user info
-    setStatus('Fetching user info...');
+    let tokenData;
+    try { tokenData = JSON.parse(tokenText); }
+    catch (e) { throw new Error('Token response is not valid JSON: ' + tokenText); }
+
+    const accessToken = tokenData.access_token;
+    if (!accessToken) throw new Error('No access_token in token response: ' + tokenText);
+    log('Got access_token ✓', 's');
+
+    // ---- User info ----
+    setStatusBanner('Fetching user info...', 'info');
+    log('GET ' + USERINFO_ENDPOINT, 'i');
+
     const userRes = await fetch(USERINFO_ENDPOINT, {
-      headers: { Authorization: `Bearer ${accessToken}` }
+      headers: { Authorization: 'Bearer ' + accessToken }
     });
+
     const userText = await userRes.text();
-    if (!userRes.ok) {
-      throw new Error(`Userinfo failed (${userRes.status}): ${userText}`);
-    }
-    const userData = JSON.parse(userText);
+    log('Userinfo status: ' + userRes.status, userRes.ok ? 's' : 'e');
+    log('Userinfo body: ' + userText, userRes.ok ? 's' : 'e');
 
-    setStatus('Login successful ✓', 'ok');
-    outputEl.innerHTML = `
-      <h2>User Info</h2>
-      <pre>${escapeHtml(JSON.stringify(userData, null, 2))}</pre>
-      <h2>Token Response</h2>
-      <pre>${escapeHtml(JSON.stringify(tokenData, null, 2))}</pre>
-    `;
-    revokeBtn.classList.remove('hidden');
-    startOverBtn.classList.remove('hidden');
+    setKV('dbgServer',
+      'TOKEN ENDPOINT\nStatus: ' + tokenRes.status + '\nBody:\n' + tokenText +
+      '\n\n=== USERINFO ENDPOINT ===\nStatus: ' + userRes.status + '\nBody:\n' + userText
+    );
 
-    // Clean URL so refresh doesn't retry
+    if (!userRes.ok) throw new Error('Userinfo failed (' + userRes.status + '): ' + userText);
+
+    let userData;
+    try { userData = JSON.parse(userText); }
+    catch (e) { throw new Error('Userinfo response is not valid JSON: ' + userText); }
+
+    // ---- Success ----
+    setStatusBanner('Login successful ✓', 'ok');
+    log('LOGIN SUCCESSFUL', 's');
+
+    document.getElementById('output').innerHTML =
+      '<h2>User Info</h2><pre>' + escapeHtml(JSON.stringify(userData, null, 2)) + '</pre>' +
+      '<h2>Token Response</h2><pre>' + escapeHtml(JSON.stringify(tokenData, null, 2)) + '</pre>';
+
+    window.__accessToken = accessToken;
+    document.getElementById('revokeBtn').classList.remove('hidden');
+
     window.history.replaceState({}, '', window.location.pathname);
+    refreshDebug();
+
   } catch (err) {
-    setStatus(err.message, 'error');
-    startOverBtn.classList.remove('hidden');
-    console.error(err);
+    log('ERROR: ' + err.message, 'e');
+    setStatusBanner(err.message, 'error');
   }
 })();
 
 /* ============================================================
-   Step 3 — Revoke
+   Revoke
    ============================================================ */
-revokeBtn.addEventListener('click', async () => {
-  if (!accessToken) return;
-  setStatus('Revoking token...');
+document.getElementById('revokeBtn').addEventListener('click', async () => {
+  const token = window.__accessToken;
+  if (!token) return;
+  setStatusBanner('Revoking token...', 'info');
+  log('POST ' + REVOKE_ENDPOINT, 'i');
   try {
     const res = await fetch(REVOKE_ENDPOINT, {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body: new URLSearchParams({
-        token: accessToken,
+        token: token,
         token_type_hint: 'access_token',
         client_id: CLIENT_ID
       })
     });
+    const text = await res.text();
+    log('Revoke status: ' + res.status, res.ok ? 's' : 'e');
+    log('Revoke body: ' + text, res.ok ? 's' : 'e');
+    setKV('dbgServer', 'REVOKE\nStatus: ' + res.status + '\nBody:\n' + text);
     if (res.ok) {
-      setStatus('Token revoked ✓', 'ok');
-      revokeBtn.classList.add('hidden');
-      outputEl.innerHTML = '';
+      setStatusBanner('Token revoked ✓', 'ok');
+      document.getElementById('revokeBtn').classList.add('hidden');
+      document.getElementById('output').innerHTML = '';
     } else {
-      setStatus(`Revoke failed: ${res.status}`, 'error');
+      setStatusBanner('Revoke failed: ' + res.status, 'error');
     }
   } catch (err) {
-    setStatus('Revoke error: ' + err.message, 'error');
+    log('Revoke error: ' + err.message, 'e');
+    setStatusBanner('Revoke error: ' + err.message, 'error');
   }
 });
 
 /* ============================================================
-   Step 4 — Start over
+   Start Over / Clear Log / Copy Report
    ============================================================ */
-startOverBtn.addEventListener('click', () => {
+document.getElementById('startOverBtn').addEventListener('click', () => {
+  sessionStorage.clear();
+  localStorage.removeItem('oauth_state');
+  localStorage.removeItem('pkce_code_verifier');
   window.location.href = window.location.pathname;
 });
 
+document.getElementById('clearLogBtn').addEventListener('click', () => {
+  logEl.innerHTML = '';
+  logLines.length = 0;
+});
+
+document.getElementById('copyReportBtn').addEventListener('click', async () => {
+  const report =
+    '=== PAGE ===\n' + document.getElementById('dbgPage').textContent +
+    '\n\n=== CONFIG ===\n' + document.getElementById('dbgConfig').textContent +
+    '\n\n=== STORAGE ===\n' + document.getElementById('dbgStorage').textContent +
+    '\n\n=== URL PARAMS ===\n' + document.getElementById('dbgParams').textContent +
+    '\n\n=== LAST AUTHORIZE URL ===\n' + document.getElementById('dbgAuthUrl').textContent +
+    '\n\n=== SERVER RESPONSE ===\n' + document.getElementById('dbgServer').textContent +
+    '\n\n=== LOG ===\n' + logLines.map(l => '[' + l.time + '] ' + l.msg).join('\n');
+
+  try {
+    await navigator.clipboard.writeText(report);
+    alert('Report copied to clipboard');
+  } catch (e) {
+    // fallback
+    const ta = document.createElement('textarea');
+    ta.value = report;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    ta.remove();
+    alert('Report copied (fallback)');
+  }
+});
+
 /* ============================================================
-   Tiny HTML escape
+   Utility
    ============================================================ */
 function escapeHtml(str) {
-  return str
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;');
+  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
+
+/* ============================================================
+   Boot
+   ============================================================ */
+log('App loaded', 'i');
+refreshDebug();
+window.addEventListener('pageshow', refreshDebug);
 </script>
 </body>
 </html>
