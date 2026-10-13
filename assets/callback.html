@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OAuth Callback</title>
+    <style>
+        body { font-family: sans-serif; padding: 2rem; background: #f0f2f5; }
+        .container { max-width: 600px; margin: 0 auto; background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .error { color: #dc3545; }
+        pre { background: #eee; padding: 1rem; border-radius: 5px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>OAuth Callback</h1>
+        <div id="status">Processing login...</div>
+        <div id="userInfo"></div>
+    </div>
+
+    <script>
+        // --- Configuration ---
+        const CLIENT_ID = '92a9f588765598039a0710bfbf8c4ef2';
+        const REDIRECT_URI = 'https://aayushpokhrel49.github.io/auth/callback.html';
+        const TOKEN_ENDPOINT = 'http://betawebsite.gt.tc/api/oauth/token';
+        const USERINFO_ENDPOINT = 'http://betawebsite.gt.tc/api/oauth/userinfo';
+
+        const statusEl = document.getElementById('status');
+        const userInfoEl = document.getElementById('userInfo');
+
+        (async function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const code = urlParams.get('code');
+            const returnedState = urlParams.get('state');
+            const error = urlParams.get('error');
+
+            if (error) {
+                statusEl.textContent = `Authorization error: ${error}`;
+                statusEl.className = 'error';
+                return;
+            }
+
+            if (!code) {
+                statusEl.textContent = 'No authorization code found in URL.';
+                statusEl.className = 'error';
+                return;
+            }
+
+            // 1. Verify the 'state' parameter to prevent CSRF attacks
+            const storedState = sessionStorage.getItem('oauth_state');
+            if (!returnedState || returnedState !== storedState) {
+                statusEl.textContent = 'State mismatch. Potential CSRF attack.';
+                statusEl.className = 'error';
+                return;
+            }
+            sessionStorage.removeItem('oauth_state'); // Clean up
+
+            // 2. Retrieve the stored PKCE code_verifier
+            const codeVerifier = sessionStorage.getItem('pkce_code_verifier');
+            if (!codeVerifier) {
+                statusEl.textContent = 'PKCE code_verifier not found. Please try logging in again.';
+                statusEl.className = 'error';
+                return;
+            }
+            sessionStorage.removeItem('pkce_code_verifier'); // Clean up
+
+            // 3. Exchange the authorization code for an access token
+            statusEl.textContent = 'Exchanging code for token...';
+            try {
+                const tokenResponse = await fetch(TOKEN_ENDPOINT, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams({
+                        grant_type: 'authorization_code',
+                        code: code,
+                        redirect_uri: REDIRECT_URI,
+                        client_id: CLIENT_ID,
+                        code_verifier: codeVerifier,
+                    }),
+                });
+
+                if (!tokenResponse.ok) {
+                    const errorData = await tokenResponse.text();
+                    throw new Error(`Token exchange failed (${tokenResponse.status}): ${errorData}`);
+                }
+
+                const tokenData = await tokenResponse.json();
+                const accessToken = tokenData.access_token;
+
+                if (!accessToken) {
+                    throw new Error('Access token not found in response.');
+                }
+
+                // 4. Use the access token to fetch user information
+                statusEl.textContent = 'Fetching user info...';
+                const userInfoResponse = await fetch(USERINFO_ENDPOINT, {
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`,
+                    },
+                });
+
+                if (!userInfoResponse.ok) {
+                    throw new Error(`User info request failed (${userInfoResponse.status})`);
+                }
+
+                const userInfo = await userInfoResponse.json();
+
+                // 5. Display the results
+                statusEl.textContent = 'Login successful!';
+                statusEl.className = '';
+                userInfoEl.innerHTML = `
+                    <h3>User Information</h3>
+                    <pre>${JSON.stringify(userInfo, null, 2)}</pre>
+                    <h3>Token Response</h3>
+                    <pre>${JSON.stringify(tokenData, null, 2)}</pre>
+                `;
+
+            } catch (err) {
+                statusEl.textContent = `An error occurred: ${err.message}`;
+                statusEl.className = 'error';
+                console.error(err);
+            }
+        })();
+    </script>
+</body>
+</html>
